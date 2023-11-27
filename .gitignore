@@ -55,6 +55,7 @@ Thumbs.db
 cmds.txt
 /frontend/examineai-frontend/README.md
 /frontend/examineai-frontend/package-lock.json
+/frontend/examineai-frontend/package.json
 /frontend/examineai-frontend/public/logo192.png
 /frontend/examineai-frontend/public/logo512.png
 /frontend/examineai-frontend/public/manifest.json
@@ -65,3 +66,5 @@ cmds.txt
 /frontend/examineai-frontend/src/logo.svg
 /frontend/examineai-frontend/src/reportWebVitals.js
 /frontend/examineai-frontend/src/setupTests.js
+/frontend/examineai-frontend/.gitignore
+
