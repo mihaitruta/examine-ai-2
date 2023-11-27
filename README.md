@@ -2,11 +2,14 @@
 
 ## Overview
 
-This repository contains the code for `examine|AI`, a React-based web application that provides an interactive chat interface with an AI (built using OpenAI's GPT model). The application includes a safeguard system that evaluates AI responses against safety principles, aiming to foster trustworthy conversations with AI.
+This repository contains the code for `examine|AI`, a React-based web application that provides an interactive chat interface with an AI (built using OpenAI's GPT model). The application will include a safeguard system that evaluates AI responses against safety principles, aiming to foster trustworthy conversations with AI.
 
 ## Features
 
 - Interactive chat with an AI model.
+
+## Coming soon
+
 - Storage of chat history with timestamps.
 - Safety evaluation of AI responses using predefined principles.
 - Docker support for containerization.
@@ -14,66 +17,97 @@ This repository contains the code for `examine|AI`, a React-based web applicatio
 ## Requirements
 
 - Python 3.x
-- Docker (for containerization)
 - An OpenAI API key (required for accessing the AI model)
 
-## Installation
-
-Before running the application, ensure you have Docker installed and running on your machine.
-
-### Building the Docker Container
-
-1. Clone the repository to your local machine.
-2. Navigate to the cloned directory.
-3. Build the Docker image:
-
-```sh
-docker build -t examine_ai .
-```
-
-### Running the Docker Container
-
-After the image is built, you can run the application inside a Docker container:
-
-```sh
-docker run -p 8501:8501 examine_ai
-```
-
-The application will be available at `http://localhost:8501`.
-
-## Usage
+## Setup Instructions
 
 ### Set Up Environment Variable
 
-Before you start using the application, you must set up your OpenAI API key as an environment variable. If running locally without Docker, you can set the environment variable as follows:
+Before you start using the application, you must set up your OpenAI API key as an environment variable.
+You can do that as follows:
 
 ```sh
 export OPENAI_API_KEY='your_api_key_here'
 ```
+(see https://help.openai.com/en/articles/5112595-best-practices-for-api-key-safety for more info)
 
-If running with Docker, ensure to pass the API key as an environment variable to the Docker container:
+### Backend Setup
 
-```sh
-docker run -e OPENAI_API_KEY='your_api_key_here' -p 8501:8501 examine_ai
-```
+`git clone https://github.com/mihaitruta/examine-ai-2.git`
 
-### Interacting with the Application
+`cd examine-ai-2`
+
+#### Setting up a Virtual Environment
+This isolates the project dependencies from the global Python environment.
+In the terminal go inside the backend folder:
+`cd backend`
+We can use pipx to install virtualenv in an isolated environment:
+Install pipx
+`brew install pipx`
+`pipx ensurepath`
+Install virtualenv
+`pipx install virtualenv`
+Or istall it globally with pip:
+`pip install virtualenv`
+
+Create a virtual environment:
+`virtualenv venv`
+Deactivate other environemnts:
+`deactivate`
+If a conda environment is active use:
+`conda deactivate`
+Activate the virtual environment we created:
+ - Windows: `venv\Scripts\activate`
+ - Linux/Mac: `source venv/bin/activate`
+ To deactivate the env when finished use:
+ `deactivate`
+
+#### Install Dependencies:
+`pip install flask openai flask-cors tiktoken`
+Flask will be used for creating the web server.
+The OpenAI library facilitates interaction with the OpenAI API.
+
+#### Running the Backend:
+`python main.py`
+Check the other_logs.log file that was created to ensure the backend server is running on the specified port (default: 5000).
+
+
+### Frontend Setup
+
+#### Navigate to Frontend Directory:
+In another terminal instance go to the fontend directory:
+`cd frontend`
+Inside there is a directory called examineai-frontend.
+Move this directory somewhere else.
+
+#### Initialize the react app
+Use the following command to initialize the React app (see https://create-react-app.dev/docs/getting-started):
+(only use sudo if you get errors otherwise)
+`sudo npx create-react-app examineai-frontend`
+For both directories public and src that we moved earlier copy their contents in the newly created directory
+to replace the files with the same name and add the new directories.
+Also copy the dependencies.txt file into the examineai-frontend directory.
+
+#### Install dependencies
+Go in the examineai-frontend directory:
+`cd examineai-frontend`
+Use the following command to install required dependencies:
+`xargs npm install < dependencies.txt`
+
+#### Start the project
+`sudo npm start`
+The frontend should now be running on localhost:3000.
+
+
+
+## Interacting with the Application
 
 - Access the web interface via your browser.
 - Type your message into the text input field to start the conversation.
-- Use the "Evaluate" button to trigger the safety evaluation of the last AI response.
 
-### AI Safeguard Evaluation
-
-The application will provide an overall score based on safety principles. The scores for individual principles are also displayed for transparency.
-
-## File Descriptions
-
-- `Dockerfile`: Contains all the commands required to build the Docker image.
-- `requirements.txt`: Lists all the Python libraries that the app depends on.
-- `chat_history.json`: This file is automatically generated and will contain the chat history with timestamps.
-- `core_principles.json`: A JSON file that should contain the safety principles for the AI responses to be evaluated against.
-- `safety_scores.json`: This file is automatically generated and will store the safety scores of AI responses.
+## Coming soon
+ - Use the "Evaluate" button to trigger the safety evaluation of the last AI response.
+ - The application will provide an overall score based on safety principles. The scores for individual principles are also displayed for transparency.
 
 ## Contributing
 
