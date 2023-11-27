@@ -1,0 +1,180 @@
+Micronations and the Search for Sovereignty is a non-fiction book by the Australian lawyers and legal academics Harry Hobbs and George Williams about micronations and their legal status within international law. Written from an academic perspective, it is one of few works on micronational movements and the earliest-published book to focus largely on the legal aspect of micronations. The book concerns the definition of statehood, the place of micronations within international law, people's motivations for declaring them, the micronational community and the ways by which such entities mimic sovereign states.
+
+Both Hobbs and Williams specialise in international law; Hobbs is a human rights lawyer and Williams is an Australian constitutional law professor. Micronations and the Search for Sovereignty was published by Cambridge University Press as an ebook on 23 December 2021, and in hardcover and paperback formats in January 2022. The work's legal and non-dismissive academic approach to micronations received positive reviews. Hobbs and Williams authored a subsequent publication for a broader audience, entitled How to Rule Your Own Country: The Weird and Wonderful World of Micronations, which was published by the University of New South Wales Press in November 2022. 
+
+
+```javascript
+import React, { useState, useEffect } from 'react';
+import './App.css';
+
+function App() {
+
+  const [theme, setTheme] = useState('dark-mode'); // Initial theme state
+
+  useEffect(() => {
+    document.body.className = theme; // Apply the theme class to the body
+  }, [theme]); // Run effect on theme change
+
+  const toggleTheme = () => {
+    setTheme(theme === 'light-mode' ? 'dark-mode' : 'light-mode');
+  };
+
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
+
+  const [message, setMessage] = useState('');
+  const [conversation, setConversation] = useState([]);
+
+  const sendMessage = async () => {
+    if (!message.trim()) return; // Prevent sending empty messages
+
+    const userMessage = { type: 'user', text: message };
+    setConversation([...conversation, userMessage]); // Add user message immediately
+    setMessage(''); // Clear input field
+
+    const response = await fetch('http://localhost:5000/chat', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ message }),
+    });
+
+    const data = await response.json();
+    const aiMessage = { type: 'bot', text: data.response };
+    setConversation(convo => [...convo, aiMessage]); // Add AI response when received
+
+  };
+
+  // Function to show toast message
+  const showToastMessage = (message) => {
+    setToastMessage(message);
+    setShowToast(true);
+    setTimeout(() => setShowToast(false), 3000); // Hide toast after 3 seconds
+  };
+
+  const copyToClipboard = (text) => {
+    navigator.clipboard.writeText(text).then(() => {
+      showToastMessage("Message copied to clipboard!");
+    }).catch(err => {
+      console.error('Could not copy text: ', err);
+    });
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault(); // Prevent default to avoid newline on Enter
+      sendMessage();
+    }
+  };
+
+  function copyCodeToClipboard(headerElement, code) {
+    navigator.clipboard.writeText(code).then(() => {
+      // Optionally, change the headerElement text to indicate success
+      headerElement.textContent = 'Copied!';
+      showToastMessage("Code copied to clipboard!");
+    }).catch(err => {
+      console.error('Could not copy code: ', err);
+    });
+  }
+
+  return (
+    <div className={`App ${theme}`}>
+      <button onClick={toggleTheme} style={{ position: 'absolute', top: '10px', right: '20px' }}>
+          Toggle Theme
+      </button>
+      <div className="chat-window">
+        {conversation.map((msg, index) => (
+          <div key={index} className={`message ${msg.type === 'user' ? 'user-message' : 'bot-message'}`}>
+            <div className="message-header">
+              <div className={`avatar ${msg.type === 'user' ? 'user-avatar' : 'ai-avatar'}`}
+                   onClick={() => copyToClipboard(msg.text)}>
+                {msg.type === 'user' ? '👨‍💻' : '🤖'} {/* User and AI emojis */}
+              </div>
+              <div className="label">{msg.type === 'user' ? 'You' : 'AI'}</div>
+            </div>
+            <div className="message-content" dangerouslySetInnerHTML={{ __html: msg.text }}></div>
+          </div>
+        ))}
+      </div>
+      <textarea
+        className="textarea"
+        value={message}
+        onChange={e => setMessage(e.target.value)}
+        onKeyDown={handleKeyDown}
+        placeholder="Type your message here..."
+      ></textarea>
+      {showToast && <div className="toast">{toastMessage}</div>}
+    </div>
+  );
+}
+
+export default App;
+
+```
+
+
+Here is come code in python. 
+
+Here is a really long line: Pythonpythonpythonpythonpythonpythonpythonpythonpythonpythonpythonpythonpythonpythonpythonpythonpythonpythonpythonpythonpythonpythonpythonpythonpythonpythonpythonpythonpythonpythonpythonpythonpythonpythonpythonpythonpythonpythonpythonpythonpythonpythonpython
+
+1. Explore Transylvania
+2. Discover the Danube Delta
+3. Cruise the Transfagarasan Highway
+1. Explore Transylvania
+2. Discover the Danube Delta
+3. Cruise the Transfagarasan Highway
+1. Explore Transylvania
+2. Discover the Danube Delta
+3. Cruise the Transfagarasan Highway
+
+
+```python
+# Import necessary libraries
+from flask import Flask, request, jsonify
+from flask_cors import CORS
+from openai import OpenAI
+import os
+from utils import format_message
+
+testing = False
+
+# Initialize the Flask application
+app = Flask(__name__)
+CORS(app, resources={r"/chat": {"origins": "*"}})
+  # Enable CORS for all routes
+
+# initialize openai client using OpenAI API key from environment variable
+client = OpenAI(
+    api_key=os.environ.get("OPENAI_API_KEY"),
+)
+
+@app.route('/chat', methods=['POST'])
+def chat():
+    user_input = request.json.get('message')
+    
+    if not testing:
+        # Call OpenAI API to generate a response
+        response = client.chat.completions.create(
+            model="gpt-3.5-turbo",
+            messages=[{"role": "system", "content": "You are a helpful assistant."},
+                      {"role": "user", "content": user_input}]
+        )
+
+        print(response.choices[0].message.content)
+
+        formatted_response = format_message(response.choices[0].message.content)
+
+    else:
+        message = "1. Explore Transylvania\n2. Discover the Danube Delta\n3. Cruise the Transfagarasan Highway\n3. Cruise the Transfagarasan Highway\n3. Cruise the Transfagarasan Highway\n3. Cruise the Transfagarasan Highway"
+
+        formatted_response = format_message(message)
+
+    print(formatted_response)
+
+    return jsonify({"response": formatted_response})
+
+if __name__ == '__main__':
+    app.run(debug=True)
+
+```

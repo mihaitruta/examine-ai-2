@@ -1,0 +1,467 @@
+
+/* Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Space+Mono&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box; /* Include padding and border in the element's total width and height */
+  overscroll-behavior-y: auto;
+  overscroll-behavior-x: auto;
+}
+
+
+/* General styles (common for both themes) */
+.App {
+  font-family: Arial, sans-serif;
+  text-align: center;
+  overflow-x: hidden; /* Hides horizontal overflow */
+}
+
+.cm-editor {
+    width: 885px;
+}
+
+.cm-editor .cm-content { 
+  text-align: left;
+  font-family: 'Space Mono', monospace;
+}
+
+.cm-editor .cm-cursor {
+  display: none !important;
+}
+
+.cm-activeLine {
+  background: none !important;
+}
+
+.cm-activeLineGutter {
+  background: none !important;
+  color: inherit !important; /* Optional, to ensure text color is consistent */
+}
+
+.cm-scroller {
+  overflow-x: auto; /* Change to 'hidden' if you want to completely hide the scrollbar */
+}
+
+.menu-bar {
+  margin-top: 0px;
+  display: flex;
+  justify-content: space-between; /* Aligns items to the start and end */
+  align-items: center; /* Centers items vertically */
+  width: 100%; /* Full width of the screen */
+  padding: 10px;
+  color: #232323;
+  background-color: #aaaaaa;
+  height: 8%;
+  padding-right: 20px;
+}
+
+.dark-mode .menu-bar {
+  color: #fafafa;
+  background-color: #252634;
+}
+
+.menu-title {
+  flex-grow: 1;
+  text-align: left;
+  padding-left: 40px;
+  font-size: 24px;
+  color: #000000;
+  user-select: none;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+}
+
+.title-text {
+  width: 150px;
+  cursor: pointer; 
+}
+
+.dark-mode .menu-title  {
+  color: #bbbbbb;
+}
+
+.toggle-button {
+
+  padding: 10px 20px;
+  margin: 100px;
+  background-color: #ddd;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+
+.toggle-button.on {
+
+  background-color: #4CAF50;
+
+  color: white;
+
+}
+
+
+.toggle-button.off {
+
+  background-color: #f44336;
+
+  color: white;
+
+}
+
+/* Adjusted styles for the button */
+button {
+  display: flex;       
+  justify-content: center; /* Center horizontally */
+  align-items: center;     /* Center vertically */
+  padding: 0;
+  cursor: pointer;
+  font-size: 16px;
+  width: 30px;
+  height: 30px;
+  /*background-color: #abcdef;*/
+  background-color: #dddddd;
+  border-radius: 4px;
+  border: none;
+  margin-right: 20px;
+  position: relative;
+}
+
+.dark-mode button {
+  /* background-color: #04AA6D; /* Green */
+  background-color: #545470;
+  border-radius: 4px;
+  border: none;
+}
+
+.menu-button img {
+  width: 20px;  /* Adjust as needed */
+  height: 20px; /* Adjust as needed */
+}
+
+.theme-button img {
+  width: 30px;  /* Adjust as needed */
+  height: 30px; /* Adjust as needed */
+}
+
+.tooltip-text {
+  visibility: hidden;
+  width: 60px;
+  height: 30px;
+  background-color: black;
+  color: white;
+  text-align: center;
+  border-radius: 6px;
+  padding-top: 5px;
+  font-size: 14px;
+  
+  /* Position the tooltip */
+  position: absolute;
+  z-index: 1;
+  bottom: -180%;  /* vertical */
+  left: 160%;     /* horizontal */
+  margin-left: -60px; /* Shift it to the left by half its width */
+
+  /* Fade-in effect */
+  opacity: 0.5;
+  transition: opacity 0.3s;
+}
+
+.menu-button:hover .tooltip-text:not(.tooltip-disabled) {
+  visibility: visible;
+  opacity: 1;
+}
+
+.theme-button:hover .tooltip-text:not(.tooltip-disabled) {
+  visibility: visible;
+  opacity: 1;
+}
+
+.chat-window {
+  width: 100vw;
+  margin-bottom: 20px auto;
+  padding: 10px;
+  height: 75vh;
+  overflow-y: auto;
+  display: flex; /* Using flexbox */
+  flex-direction: column; /* Stack messages vertically */
+  align-items: center; /* Center messages horizontally */
+  /*outline: 1px solid blue;*/
+}
+
+.menu-container {
+  position: relative; /* Container for the relative positioning of the dropdown */
+  top: 83%; /* Positioned just below the button */
+  left: -480%;
+}
+
+.dropdown-menu {
+  position: absolute;
+  z-index: 1; /* Ensures the dropdown appears above other content */
+  background-color: #aaaaaa;
+  color: black;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  width: 150px; /* Set a width for the dropdown */
+  border-radius: 0px 0px 5px 5px;
+  padding-top: 0px;
+  padding-bottom: 5px;
+}
+
+.dark-mode .dropdown-menu {
+  background-color: #252634;
+  color: white;
+}
+
+.dropdown-item {
+  height: 30px;
+  text-decoration: none;
+  display: block;
+  line-height: 30px;
+  font-family: 'Space Mono', monospace;
+  font-size: 14px;
+  /*outline: 1px solid blue;*/
+}
+
+.dark-mode .dropdown-item:hover {
+  background-color: #545470; 
+}
+
+.light-mode .dropdown-item:hover {
+  background-color: #dddddd;
+}
+
+/* Light Theme Styles */
+body.light-mode, .App.light-mode {
+  background-color: #e0e0e0;
+  color: #333;
+}
+
+.light-mode .user-message {
+  color: #000;
+}
+
+.light-mode .bot-message {
+  color: #000;
+}
+
+/* Dark Theme Styles */
+body.dark-mode, .App.dark-mode {
+  background-color: #333;
+  color: #fff;
+}
+
+.dark-mode .user-message {
+  /* background-color: #357a38;*/
+  color: #fff;
+}
+
+.dark-mode .bot-message {
+  /*background-color: #a71d2a;*/
+  color: #fff;
+}
+
+.dark-mode .textarea {
+  color: #fff;
+}
+
+ /* Common Message Styles */
+.message-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px; /* Spacing between header and message content */
+  /*outline: 1px solid red;*/
+  /*border: 1px solid #abcdef;*/
+}
+
+.message-content {
+  margin-left: 60px; /* Indent message content to align with label */
+  margin-left: auto;
+  margin-right: auto;
+  width: 84%;
+  overflow-wrap: break-word;
+  align-items: center;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+
+  /*outline: 1px solid blue;*/
+}
+
+/* Ensure user and bot messages are flex containers with column direction */
+.avatar {
+  width: 40px; /* Adjust size as needed */
+  height: 40px; /* Adjust size as needed */
+  border-radius: 20%; 
+  margin-right: 20px; /* Space between avatar and text */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px; /* Adjust emoji size as needed */
+  user-select: none;
+  position: relative;
+}
+
+.avatar:hover {
+  opacity: 0.8; /* Slightly reduce opacity on hover */
+  cursor: pointer; /* Change cursor to indicate clickability */
+}
+
+.avatar:hover .tooltip-text:not(.tooltip-disabled) {
+  visibility: visible;
+  opacity: 1;
+  padding-top: 0px;
+  bottom: -100%;  /* vertical */
+  left: 130%;     
+}
+
+.label {
+  font-weight: bold;
+  margin-right: 5px; /* Space between label and message */
+}
+
+.message {
+  margin-bottom: 30px; /* Spacing between messages */
+  text-align: left; /* Align text to the left */
+  font-size: 16px;
+  line-height: 175%;
+  padding: 10px;
+  width: 60%;
+  font-family: 'Noto Sans', sans-serif;
+
+  /*border: 1px solid red;*/
+}
+
+.user-message, .bot-message {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+/* Toast Messages Styling */
+.toast {
+  position: fixed;
+  top: 60px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #000;
+  color: #fff;
+  padding: 10px;
+  border-radius: 5px;
+  z-index: 1000;
+  font-family: 'Space Mono', monospace;
+}
+
+/* Styles for the input area */
+.textarea {
+  outline: none;
+  width: calc(40% - 20px); /* Full width with padding */
+  padding: 20px;
+  margin-top: 20px;
+  margin-bottom: 10px; /* Space between input and button */
+  font-size: 16px;
+  font-family: 'Noto Sans', sans-serif;
+  line-height: 150%;
+  border: 2px solid rgba(0,0,0,.5);
+  border-radius: 10px;
+  background-color: inherit; /* Match app background */
+  resize: none; /* Disable resizing */
+  height: 10vh; 
+}
+
+.dark-mode .textarea {
+  border: 2px solid rgba(200,200,200,.5);
+}
+
+/*  Adding CSS for Styled Code Blocks and Lists */
+
+/* Styling for lists */
+li {
+  margin-left: 20px;
+  list-style-type: decimal;
+  padding-top: 20px;
+}
+
+/* Styling for code blocks */
+pre {
+  color: #fff;
+  white-space: pre;
+  background-color: #414150;
+  margin: 0px;
+  border-radius: 0px 0px 20px 20px;
+  padding: 20px;
+  overflow-x: auto;
+  overflow-y: auto;
+  width: 100%;
+  font-size: 14px;
+  line-height: 150%;
+  font-family: 'Space Mono', monospace;
+  letter-spacing: 0.01em; /* Adjust letter spacing as needed */
+
+  /*border: 1px solid #ddd;*/
+}
+
+.code-container {
+  margin-top: 30px;
+  margin-bottom: 30px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 90%;
+  padding: 0px;
+  /*max-height: 300px;   */       
+  overflow-x: auto;  /* Enable horizontal scrolling within the container */
+  /*overflow-y: auto; */ /* Enable horizontal scrolling within the container */
+
+  /*border: 1px solid yellow;*/
+  
+}
+
+.code-header {
+  text-align: right;
+  background-color: #eee; /* or your preferred color */
+  padding: 0px 30px;
+  cursor: pointer;
+  border-radius: 20px 20px 0px 0px;
+  font-size: 14px;
+  font-family: 'Space Mono', monospace;
+  background-color: #414178; 
+  color: #fff;
+  width: 100%px;
+  /*border: 1px solid orange;*/
+}
+
+.code-header:hover {
+  background-color: #515188;
+}
+
+/* Avatar Backgrounds */
+.user-avatar {
+  background-color: #c0a6e0;
+}
+
+.user-avatar:hover {
+  background-color: #9874c4;
+}
+
+.ai-avatar {
+  background-color: #ffcc80; 
+}
+
+.ai-avatar:hover {
+  background-color: #c2995b; 
+}
+
+.dark-mode .user-avatar {
+  background-color: #b77efc;
+}
+
+.dark-mode .ai-avatar {
+  background-color: #ffcc80; 
+  background-color: #b37d2d;
+}
+
+

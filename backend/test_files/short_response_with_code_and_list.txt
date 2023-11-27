@@ -1,0 +1,17 @@
+Hi!
+
+
+Here is some code:
+```python
+def sum(a, b):
+    return a + b
+```
+
+Also, here are five things to do in Monaco:
+
+1. Scuba diving: Scuba diving is a mode of underwater diving whereby divers use breathing equipment that is completely independent of a surface air supply, and therefore has a limited but variable endurance.
+2. Dancing: Dance is an art form, often classified as a sport, consisting of sequences of body movements with aesthetic and often symbolic value, either improvised or purposefully selected.
+3. Driving: Driving is the controlled operation and movement of a land vehicle, including cars, motorcycles, trucks, and buses. Permission to drive on public highways is granted based on a set of conditions being met and drivers are required to follow the established road and traffic laws in the location they are driving.
+4. Partying: A party is a gathering of people who have been invited by a host for the purposes of socializing, conversation, recreation, or as part of a festival or other commemoration or celebration of a special occasion.
+5. Hiking: Hiking is a long, vigorous walk, usually on trails or footpaths in the countryside. Walking for pleasure developed in Europe during the eighteenth century.
+
