@@ -5,7 +5,7 @@ import re
 from typing import List, Dict
 from primary import PrimaryAI
 from safeguard import SafeguardAI
-from utils import read_records, setup_logging, write_objects_to_jsonl
+from utils import read_records_with_id, setup_logging, write_objects_to_jsonl
 
 
 
@@ -94,6 +94,6 @@ if __name__ == "__main__":
         logger = logger
     )
 
-    records = read_records(dataset_file, logger=logger)
+    records = read_records_with_id(dataset_file, logger=logger)
 
     get_answers(primaryAI, records, answers_file=answers_file)

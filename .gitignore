@@ -68,3 +68,6 @@ cmds.txt
 /frontend/examineai-frontend/src/setupTests.js
 /frontend/examineai-frontend/.gitignore
 
+# Chat logs
+chat_logs/
+

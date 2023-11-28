@@ -4,10 +4,17 @@ from flask_cors import CORS
 from openai import OpenAI
 import os
 from utils import format_message, setup_logging
+from chat_store import ChatStore
 from openai_api import OpenAIResponder
 import logging
+from typing import List, Dict
+from datetime import datetime
+
 
 testing = -1
+
+timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+print("Setting new conversation timestamp: ", timestamp)
 
 # Make sure to set the OPENAI_API_KEY in your environment variables.
 api_key = os.environ.get("OPENAI_API_KEY")
@@ -17,23 +24,15 @@ logger = setup_logging('main_log')
 
 # Initialize the Flask application
 app = Flask(__name__)
-
 # Enable CORS for all routes
 CORS(app, resources={r"/chat": {"origins": "*"}})
 
-
-@app.route('/chat', methods=['POST'])
-def chat():
-    user_input = request.json.get('message')
-
-    messages=[{"role": "system", "content": "You are a helpful assistant."},
-                      {"role": "user", "content": user_input}]
-    
+def _testing(conversation : List[Dict]):
     if testing == 0:
         # Call OpenAI API to generate a response
         response = client.chat.completions.create(
             model="gpt-3.5-turbo",
-            messages=messages
+            messages=conversation
         )
 
         print(response.choices[0].message.content)
@@ -55,23 +54,57 @@ def chat():
             message = file.read()
 
         formatted_response = format_message(message)
-    else:
-        formatted_response = format_message("...")
+
+    print(formatted_response)
 
 
+@app.route('/chat', methods=['POST'])
+
+def chat():
 
 
+    conversation = ChatStore.retrieve_chat(timestamp)
+
+    
+    print('conversation:',  conversation)
+
+    # obtain user input from the frontend
+    user_input = request.json.get('message')
+
+    # we append it to the conversation
+    conversation.append({
+        'role': 'user', 
+        'content': user_input
+    })
+
+    if testing >= 0:
+        print("testing")
+        _testing(conversation)
+    
+    # we define the primary AI settings
     primary_AI_responder = OpenAIResponder(
         api_key = api_key,
         #model = model_id,
         logger = logger
     )
+    
+    # we get the response from the primary AI
+    content, status, details = primary_AI_responder.get_response(conversation)
 
-    content, status, details = primary_AI_responder.get_response(messages)
-
+    # we format it to html
     formatted_response = format_message(content)
-    print(formatted_response)
 
+    # we append the response to the conversation
+    ChatStore.add_message(
+        timestamp,
+        {
+            'role': 'assistant', 
+            'content': formatted_response,
+            'status' : status
+        }
+    )
+
+    # we return the response to the frontend
     return jsonify({"response": formatted_response})
 
 if __name__ == '__main__':

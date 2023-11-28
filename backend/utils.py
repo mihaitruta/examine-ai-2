@@ -47,10 +47,8 @@ def format_message(text):
 
 
     lines = text.split('\n')
-    print(lines)
     lines_ct = len(text.split('\n'))
     for idx, line in enumerate(lines):
-        print('processing line: ', line)
         if line.startswith('```'):
             in_code_block = not in_code_block
             if in_code_block:
@@ -73,14 +71,11 @@ def format_message(text):
             code_lines.append(escape_html(line))
             code_content += line + '\n'
         else:
-            print('not in code block')
             if re.match(r"^\d+\.\s+", line):
-                print('line in list')
                 # Apply list formatting to lines outside code blocks
                 formatted_line = re.sub(r"^(\d+\.)\s+(.*)", r"<li>\2</li>", escape_html(line))
                 formatted_lines.append(formatted_line)
             else:
-                print('line not in list')
                 formatted_line = escape_html(line)
                 #if formatted_line == '':
                 #    formatted_line = '<br>'
@@ -102,7 +97,7 @@ def format_message(text):
 
 # modified from 
 # https://github.com/allenai/aristo-leaderboard/blob/master/openbookqa/evaluator/evaluator.py
-def read_records(filename: str, logger, fields : List = None) -> Dict:
+def read_records_with_id(filename: str, logger, fields : List = None) -> Dict:
 
     records = {}
 
@@ -134,10 +129,40 @@ def read_records(filename: str, logger, fields : List = None) -> Dict:
     if len(records) == 0:
         logging.error("No answers found in file %s", filename)
         sys.exit(EXIT_STATUS_ANSWERS_MALFORMED)
-    print('logging')
     logging.info("\nSuccessfully read file %s.\n", filename)
     
     return records
+
+def read_records(filename: str, logger, fields : List = None) -> Dict:
+
+    records = []
+
+    record_nr = 0
+    with open(filename, "rt", encoding="UTF-8", errors="replace") as f:
+        for line in f:
+            line = line.strip()
+            try:
+                record = json.loads(line)
+            except ValueError as e:
+                logging.error("Error while reading file %s: %s", filename, e)
+                sys.exit(EXIT_STATUS_ANSWERS_MALFORMED)
+
+            if fields is None:
+                records.append(record)
+            else:
+                item = {}
+                for field in fields:
+                    if field in record:
+                        item[field] = record[field]
+                    else:
+                        logging.error("Field %s not in record %s in file %s.", field, record_nr, filename)
+                records.append(item)
+            record_nr += 1
+
+    logging.info("\nSuccessfully read file %s.\n", filename)
+    
+    return records
+
 
 # based on https://github.com/allenai/aristo-leaderboard/blob/master/openbookqa/evaluator/evaluator.py
 def calculate_accuracy(actual : Dict, predicted : Dict, logger) :
@@ -169,7 +194,6 @@ def calculate_accuracy(actual : Dict, predicted : Dict, logger) :
 
 def write_objects_to_jsonl(objects, file_path, mode='a'):
     # Ensure the directory exists
-    print('mode = ', mode)
     os.makedirs(os.path.dirname(file_path), exist_ok=True)
 
     write_on_new_line = False

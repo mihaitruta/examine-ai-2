@@ -1,20 +1,11 @@
 import openai
 from openai import OpenAI
 import os
-
 import json
-#from datetime import datetime
 from typing import List, Dict, Tuple
-#import random
 from utils import num_tokens_from_string, api_details
-#(parse_evaluation, get_color, text_to_html, calculate_average, 
-#                   get_random_score, num_tokens_from_string, api_details)
-#from prompts import safeguard_assessment
-#import time
 from datetime import datetime
 import logging
-#import pyperclip
-
 
 class OpenAIResponder:
     """
