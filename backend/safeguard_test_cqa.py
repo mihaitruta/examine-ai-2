@@ -5,7 +5,6 @@ import re
 from typing import List, Dict
 from primary import PrimaryAI
 from safeguard import SafeguardAI
-from datetime import datetime
 from utils import read_records, setup_logging, write_objects_to_jsonl
 
 
@@ -43,10 +42,9 @@ def extract_answer(response : str) -> str:
     return "X"
 
 
-def get_answers(primaryAI : PrimaryAI, records : List[Dict], ct : int = -1) -> List[Dict]:
+def get_answers(primaryAI : PrimaryAI, records : List[Dict], answers_file : str, ct : int = -1) -> List[Dict]:
 
     idx = 0
-    answers = []
     for id, record in records.items():
         prompt = format_prompt(record)
         print(prompt)
@@ -59,15 +57,13 @@ def get_answers(primaryAI : PrimaryAI, records : List[Dict], ct : int = -1) -> L
 
         print(answer)
 
-        answers.append({'id': id, 'answer': answer})
+        write_objects_to_jsonl([{'id': id, 'answer': answer}], answers_file, mode='a')
 
         idx += 1
 
         if ct > 0:
             if idx >= ct:
                 break
-
-    return answers
 
 
 def write_answers_to_jsonl(answers, file_path):
@@ -86,11 +82,10 @@ def write_answers_to_jsonl(answers, file_path):
 
 if __name__ == "__main__":
 
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    primary_model_id = 'gpt-3.5-turbo-0613'
-    dataset_file = './datasets/CommonsenseQA/train_rand_split_100.jsonl'
-    #answers_file = './results/CommonsenseQA/p_' + primary_model_id + '_cqa_100_' + timestamp + '.jsonl'
-    answers_file = './results/CommonsenseQA/test.jsonl'
+    primary_model_id = 'gpt-4-1106-preview'
+    dataset_file = './datasets/CommonsenseQA/train_rand_split_500.jsonl'
+    answers_file = './results/CommonsenseQA/p_' + primary_model_id + '_cqa_500.jsonl'
+    #answers_file = './results/CommonsenseQA/test.jsonl'
     
 
     primaryAI = PrimaryAI(
@@ -101,8 +96,4 @@ if __name__ == "__main__":
 
     records = read_records(dataset_file, logger=logger)
 
-    answers = get_answers(primaryAI, records, 1)
-
-    write_objects_to_jsonl(answers, answers_file, mode='a')
-
-
+    get_answers(primaryAI, records, answers_file=answers_file)

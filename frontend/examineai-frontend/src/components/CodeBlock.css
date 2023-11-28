@@ -1,0 +1,35 @@
+
+
+/* we set the width of the code blocks */
+.cm-theme { 
+  width: 80%;
+  padding: 20px;
+}
+
+.cm-theme ::-webkit-scrollbar {
+  display: none; /* Hides the scrollbar */
+}
+
+/* font settings fro code blocks */
+.cm-editor .cm-content { 
+  text-align: left;
+  font-family: 'Space Mono', monospace;
+}
+
+/* hide the blinking cursor */
+.cm-editor .cm-cursor {
+  display: none !important;
+}
+
+/* hide active line highlighting */
+.cm-activeLine {
+  background: none !important;
+}
+
+/* hide active line number highlighting */
+.cm-activeLineGutter {
+  background: none !important;
+  color: inherit !important; /* Optional, to ensure text color is consistent */
+}
+
+

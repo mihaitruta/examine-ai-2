@@ -1,0 +1,42 @@
+
+/* Styles for the input area */
+.textarea {
+  outline: none;
+  width: calc(40% - 20px); /* Full width with padding */
+  padding: 15px;
+  margin-top: 20px;
+  margin-bottom: 10px; /* Space between input and button */
+  font-size: 16px;
+  font-family: 'Noto Sans', sans-serif;
+  line-height: 150%;
+  border: 2px solid rgba(0,0,0,.5);
+  border-radius: 10px;
+  background-color: inherit; /* Match app background */
+  resize: none; /* Disable resizing */
+  height: 10vh; 
+}
+
+/* Media query for smaller screens */
+@media screen and (max-width: 1400px) { /* Adjust 600px as needed */
+  .textarea {
+    width: calc(65% - 20px); /* Larger width on smaller screens */
+  }
+}
+
+/* Media query for very small screens */
+@media screen and (max-width: 1000px) { /* Adjust 600px as needed */
+  .textarea {
+    width: calc(80% - 20px); /* Larger width on smaller screens */
+  }
+}
+
+
+.textarea::-webkit-scrollbar {
+  display: none; /* Hides the scrollbar */
+}
+
+.dark-mode .textarea {
+  border: 2px solid rgba(200,200,200,.5);
+  color: #fff;
+}
+

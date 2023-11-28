@@ -1,0 +1,35 @@
+
+.dropdown-menu {
+  position: absolute;
+  z-index: 1; /* Ensures the dropdown appears above other content */
+  background-color: #aaaaaa;
+  color: black;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  width: 150px; /* Set a width for the dropdown */
+  border-radius: 0px 0px 5px 5px;
+  padding-top: 0px;
+  padding-bottom: 5px;
+}
+
+.dark-mode .dropdown-menu {
+  background-color: #252634;
+  color: white;
+}
+
+.dropdown-item {
+  height: 30px;
+  text-decoration: none;
+  display: block;
+  line-height: 30px;
+  font-family: 'Space Mono', monospace;
+  font-size: 14px;
+  /*outline: 1px solid blue;*/
+}
+
+.dark-mode .dropdown-item:hover {
+  background-color: #545470; 
+}
+
+.light-mode .dropdown-item:hover {
+  background-color: #dddddd;
+}

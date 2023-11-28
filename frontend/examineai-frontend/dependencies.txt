@@ -1,5 +1,7 @@
 @uiw/react-codemirror
 @codemirror/lang-python
 @codemirror/lang-javascript
+@codemirror/lang-html
+@codemirror/lang-css
 @uiw/codemirror-theme-andromeda
 @uiw/codemirror-theme-monokai

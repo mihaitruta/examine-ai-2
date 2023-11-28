@@ -1,0 +1,195 @@
+.chat-window {
+  width: 50%;
+  height: 75%;
+  margin-bottom: 20px auto;
+  overflow-y: auto;
+  display: flex; /* Using flexbox */
+  flex-direction: column; /* Stack messages vertically */
+  align-items: center; /* Center messages horizontally */
+}
+
+/* Media query for smaller screens */
+@media screen and (max-width: 1400px) { /* Adjust 600px as needed */
+  .chat-window {
+    width: 65%; /* Larger width on smaller screens */
+  }
+}
+
+/* Media query for very small screens */
+@media screen and (max-width: 1000px) { /* Adjust 600px as needed */
+  .chat-window {
+    width: 80%; /* Larger width on smaller screens */
+  }
+}
+
+.chat-window::-webkit-scrollbar {
+  display: none; /* Hides the scrollbar */
+}
+
+/* Common Message Styles */
+
+.message {
+  margin-top: 20px; /* Spacing between messages */
+  text-align: left; /* Align text to the left */
+  font-size: 16px;
+  line-height: 175%;
+  padding-bottom: 20px;
+  width: 100%;
+  padding: 20px;
+  font-family: 'Noto Sans', sans-serif;
+}
+
+.message-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px; /* Spacing between header and message content */
+}
+
+/* Avatar Style */
+.avatar {
+  width: 40px; /* Adjust size as needed */
+  height: 40px; /* Adjust size as needed */
+  border-radius: 20%; 
+  margin-right: 10px; /* Space between avatar and text */
+  display: flex;
+  align-items: center;  /* We vertically center the emoji inside the avatar */
+  justify-content: center; /* We horizontally center the emoji inside the avatar */
+  font-size: 24px; /* Adjust emoji size as needed */
+  user-select: none;
+  position: relative;
+}
+
+.avatar:hover {
+  opacity: 0.8; /* Slightly reduce opacity on hover */
+  cursor: pointer; /* Change cursor to indicate clickability */
+}
+
+.avatar:hover .tooltip-text:not(.tooltip-disabled) {
+  visibility: visible;
+  opacity: 1;
+  padding-top: 0px;
+  bottom: -100%;  /* vertical */
+  left: 130%;     
+}
+
+/* Label Style */
+.label {
+  font-weight: bold;
+  margin-right: 5px; /* Space between label and message */
+}
+
+.message-content {
+  margin-left: auto;
+  margin-right: auto;
+  width: 80%;
+  overflow-wrap: break-word;
+}
+
+.user-message, .bot-message {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.dark-mode .bot-message {
+  background-color: #454545;
+  border-radius: 10px;
+}
+
+/* Message Text Color */
+.light-mode .user-message {
+  color: #000;
+}
+
+.light-mode .bot-message {
+  color: #000;
+}
+
+.dark-mode .user-message {
+  color: #fff;
+}
+
+.dark-mode .bot-message {
+  color: #fff;
+}
+
+/*  Adding CSS for Styled Code Blocks and Lists */
+
+/* Styling for lists */
+li {
+  margin-left: 20px;
+  list-style-type: decimal;
+  padding-top: 20px;
+}
+
+/* Styling for code blocks */
+pre {
+  color: #fff;
+  white-space: pre;
+  background-color: #414150;
+  margin: 0px;
+  border-radius: 0px 0px 20px 20px;
+  padding: 20px;
+  overflow-x: auto;
+  overflow-y: auto;
+  width: 100%;
+  font-size: 14px;
+  line-height: 150%;
+  font-family: 'Space Mono', monospace;
+  letter-spacing: 0.01em; /* Adjust letter spacing as needed */
+}
+
+.code-container {
+  margin-top: 30px;
+  margin-bottom: 30px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 90%;
+  padding: 0px;
+  overflow-x: auto;  /* Enable horizontal scrolling within the container */  
+}
+
+.code-header {
+  text-align: right;
+  background-color: #eee; /* or your preferred color */
+  padding: 0px 30px;
+  cursor: pointer;
+  border-radius: 20px 20px 0px 0px;
+  font-size: 14px;
+  font-family: 'Space Mono', monospace;
+  background-color: #414178; 
+  color: #fff;
+  width: 100%px;
+}
+
+.code-header:hover {
+  background-color: #515188;
+}
+
+/* Avatar Backgrounds */
+.user-avatar {
+  background-color: #c0a6e0;
+}
+
+.user-avatar:hover {
+  background-color: #9874c4;
+}
+
+.ai-avatar {
+  background-color: #ffcc80; 
+}
+
+.ai-avatar:hover {
+  background-color: #c2995b; 
+}
+
+.dark-mode .user-avatar {
+  background-color: #b77efc;
+}
+
+.dark-mode .ai-avatar {
+  background-color: #ffcc80; 
+  background-color: #b37d2d;
+}
+
+
