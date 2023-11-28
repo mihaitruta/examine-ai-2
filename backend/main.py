@@ -3,7 +3,7 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 from openai import OpenAI
 import os
-from utils import format_message
+from utils import format_message, setup_logging
 from openai_api import OpenAIResponder
 import logging
 
@@ -12,29 +12,11 @@ testing = -1
 # Make sure to set the OPENAI_API_KEY in your environment variables.
 api_key = os.environ.get("OPENAI_API_KEY")
 
-# Setup logging
-logging.basicConfig(
-    filename='main_log.log', 
-    level=logging.INFO, 
-    format='\n<<<<<log>>>>> %(asctime)s - %(name)s - %(levelname)s - %(message)s <<<<</log>>>>>'
-)
-logger = logging.getLogger('main_log') 
-
+# initialize logging
+logger = setup_logging('main_log')
 
 # Initialize the Flask application
 app = Flask(__name__)
-
-# Divert other logs away from the main log
-# Create a file handler for the log file
-file_handler = logging.FileHandler('other_logs.log')
-# set the level and formatter for the handler
-file_handler.setLevel(logging.INFO)
-formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-file_handler.setFormatter(formatter)
-# Get the loggers for Werkzeug and add the handler
-for other_logger in (logging.getLogger('httpx'), logging.getLogger('werkzeug')):
-    other_logger.addHandler(file_handler)
-    other_logger.propagate = False  # Prevent logs from propagating to the root logger
 
 # Enable CORS for all routes
 CORS(app, resources={r"/chat": {"origins": "*"}})

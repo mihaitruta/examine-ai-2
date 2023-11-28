@@ -1,5 +1,16 @@
+import os
 import re
 import tiktoken
+from typing import List, Dict
+import json
+import logging
+
+EXIT_STATUS_ANSWERS_MALFORMED = 1
+EXIT_STATUS_PREDICTIONS_MALFORMED = 2
+EXIT_STATUS_PREDICTIONS_EXTRA = 3
+EXIT_STATUS_PREDICTION_MISSING = 4
+
+api_key = os.getenv('OPENAI_API_KEY')
 
 # in $ / 1K tokens
 api_details = {
@@ -88,3 +99,133 @@ def format_message(text):
 
     return result
 
+
+# modified from 
+# https://github.com/allenai/aristo-leaderboard/blob/master/openbookqa/evaluator/evaluator.py
+def read_records(filename: str, logger, fields : List = None) -> Dict:
+
+    records = {}
+
+    with open(filename, "rt", encoding="UTF-8", errors="replace") as f:
+        for line in f:
+            line = line.strip()
+            try:
+                record = json.loads(line)
+            except ValueError as e:
+                logging.error("Error while reading file %s: %s", filename, e)
+                sys.exit(EXIT_STATUS_ANSWERS_MALFORMED)
+
+            question_id = record["id"]
+
+            if question_id in records:
+                logging.error("Key %s repeated in %s", question_id, filename)
+                sys.exit(EXIT_STATUS_ANSWERS_MALFORMED)
+            
+            if fields is None:
+                records[question_id] = record
+            else:
+                records[question_id] = {}
+                for field in fields:
+                    if field in record:
+                        records[question_id][field] = record[field]
+                    else:
+                        logging.error("Field %s not in record %s in file %s.", field, question_id, filename)
+
+    if len(records) == 0:
+        logging.error("No answers found in file %s", filename)
+        sys.exit(EXIT_STATUS_ANSWERS_MALFORMED)
+    print('logging')
+    logging.info("\nSuccessfully read file %s.\n", filename)
+    
+    return records
+
+# based on https://github.com/allenai/aristo-leaderboard/blob/master/openbookqa/evaluator/evaluator.py
+def calculate_accuracy(actual : Dict, predicted : Dict, logger) :
+    score = 0.0
+
+    for question_id, answer in actual.items():
+        try:
+            # we take the first field as the answer (or list of answers)     
+            predictions_for_q = next(iter(predicted[question_id].values()))  
+        except KeyError:
+            logging.error("Missing prediction for question '%s'.", question_id)
+            sys.exit(EXIT_STATUS_PREDICTION_MISSING)
+
+        # we take the first field as the answer 
+        answer = next(iter(answer.values()))  
+
+        if answer in predictions_for_q:
+            score += 1.0 / len(predictions_for_q)
+
+        del predicted[question_id]
+
+    if len(predicted) > 0:
+        logging.error("Found %d extra predictions, for example: %s", len(predicted),
+                      ", ".join(list(predicted.keys())[:3]))
+        sys.exit(EXIT_STATUS_PREDICTIONS_EXTRA)
+
+    return score / len(actual)
+
+
+def write_objects_to_jsonl(objects, file_path, mode='a'):
+    # Ensure the directory exists
+    print('mode = ', mode)
+    os.makedirs(os.path.dirname(file_path), exist_ok=True)
+
+    write_on_new_line = False
+
+    # Check if the file is non-empty
+    try:
+        with open(file_path, 'r') as file:
+            # If the file has content, prepend a newline to the first line to append
+            if file.read(1):
+                write_on_new_line = True
+    except FileNotFoundError:
+        # If the file doesn't exist, it's okay; it will be created in append mode
+        pass
+
+    with open(file_path, mode) as file:
+        for idx, obj in enumerate(objects):
+            # Convert the object to JSON and write it to the file
+            json_line = json.dumps(obj)
+            # if we are adding the first object we potentially add a new line first
+            if idx == 0:
+                if write_on_new_line:
+                    file.write('\n')
+            file.write(json_line)
+            # if we wrote the last object we skip the new line
+            if idx < len(objects) - 1:
+                file.write('\n')
+
+
+
+def setup_logging(log_name : str):
+    # Setup logging
+    if log_name is not None:
+        logging.basicConfig(
+            filename=log_name+'.log', 
+            level=logging.INFO, 
+            format='\n<<<<<log>>>>> %(asctime)s - %(name)s - %(levelname)s - %(message)s <<<<</log>>>>>'
+        )
+        logger = logging.getLogger(log_name)
+    else:
+        logging.basicConfig(
+                filename='default_log.log',
+                level=logging.INFO, 
+                format='\n<<<<<log>>>>> %(asctime)s - %(name)s - %(levelname)s - %(message)s <<<<</log>>>>>'
+        )
+        logger = logging.getLogger('default_log') 
+
+    # Divert other logs away from the main log
+    # Create a file handler for the log file
+    file_handler = logging.FileHandler('other_logs.log')
+    # set the level and formatter for the handler
+    file_handler.setLevel(logging.INFO)
+    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    file_handler.setFormatter(formatter)
+    # Get the loggers for Werkzeug and add the handler
+    for other_logger in (logging.getLogger('httpx'), logging.getLogger('werkzeug')):
+        other_logger.addHandler(file_handler)
+        other_logger.propagate = False  # Prevent logs from propagating to the root logger
+
+    return logger
