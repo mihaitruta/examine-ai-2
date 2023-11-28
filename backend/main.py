@@ -22,7 +22,7 @@ logger = setup_logging('main_log')
 # Initialize the Flask application
 app = Flask(__name__)
 # Enable CORS for all routes
-CORS(app, resources={r"/chat": {"origins": "*"}, r"/reset_chat": {"origins": "*"}})
+CORS(app, resources={r"/chat": {"origins": "*"}, r"/reset_chat": {"origins": "*"}, r"/get_eval": {"origins": "*"} })
 
 def _testing(conversation : List[Dict]):
     if testing == 0:
@@ -60,6 +60,14 @@ def reset_chat():
     print("Initializing new chat")
     chat_id = ChatStore.new_chat()
     return jsonify({'message' : 'reset', 'chat_id' : chat_id})
+
+
+
+@app.route('/get_eval', methods=['POST'])
+def get_eval():
+    print("Getting safeguard eval")
+    return jsonify({'evaluation' : 'placeholder eval'})
+    
     
 
 @app.route('/chat', methods=['POST'])

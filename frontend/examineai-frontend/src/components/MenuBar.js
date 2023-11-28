@@ -7,6 +7,8 @@ import MenuButtonIconDark from '.././resources/menu-button-dark.svg';
 import MenuButtonIconLight from '.././resources/menu-button-light.svg';
 
 function MenuBar({ toggleDropdown, handleMenuItemClick, toggleTheme, theme, isDropdownVisible }) {
+
+
   return (
     <div className="menu-bar">
       <div className="menu-title">

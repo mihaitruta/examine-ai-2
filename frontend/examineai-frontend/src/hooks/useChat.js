@@ -5,6 +5,8 @@ function useChat() {
   const [conversation, setConversation] = useState([]);
   const [chatId, setChatId] = useState(null);
 
+
+
   // Function to initialize chat and get chat_id
   useEffect(() => {
     const initializeChat = async () => {
@@ -33,6 +35,9 @@ function useChat() {
   }, []);
 
 
+
+
+
   // We handle resetting the chat
   const resetChat = useCallback(async () => {
     console.log("resetting Chat")
@@ -56,6 +61,8 @@ function useChat() {
   }, []);
 
 
+
+
   // we handle message sending
   const sendMessage = async () => {
     if (!message.trim()) return; // Prevent sending empty messages
@@ -64,7 +71,6 @@ function useChat() {
       console.error('No chat ID available');
       return;
     }
-
     // we replace newlines with <br> tags for proper HTML rendering
     const formattedMessage = message.replace(/\n/g, '<br>');
 
@@ -88,7 +94,26 @@ function useChat() {
 
 
 
-  return { message, setMessage, conversation, sendMessage, resetChat };
+
+  // we get the safeguard evaluation from the backend
+  const getEvaluation = async () => {
+
+    const response = await fetch('http://localhost:5000/get_eval', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    });
+
+    const data = await response.json();
+    const evalMessage = { type: 'eval', text: data.evaluation };
+    setConversation(convo => [...convo, evalMessage]); // Add eval to conversation
+  }
+
+
+
+
+  return { message, setMessage, conversation, sendMessage, resetChat, getEvaluation };
 }
 
 export default useChat;

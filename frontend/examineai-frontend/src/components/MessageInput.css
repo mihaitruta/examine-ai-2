@@ -1,4 +1,17 @@
 
+
+.input_container {
+  width: 100%; /* Full width with padding */
+  height: 20vh; 
+  margin-bottom: 20px auto;
+  overflow-y: auto;
+  display: flex; /* Using flexbox */
+  flex-direction: column; /* Stack messages vertically */
+  align-items: center; /* Center messages horizontally */
+  scrollbar-width: none;
+}
+
+
 /* Styles for the input area */
 .textarea {
   outline: none;
@@ -13,18 +26,26 @@
   border-radius: 10px;
   background-color: inherit; /* Match app background */
   resize: none; /* Disable resizing */
-  height: 10vh; 
+  height: 8vh; 
 }
 
 /* Media query for smaller screens */
-@media screen and (max-width: 1400px) { /* Adjust 600px as needed */
+@media screen and (max-width: 1400px) { 
+  .input_container {
+    height: 30vh; 
+  }
+
   .textarea {
     width: calc(65% - 20px); /* Larger width on smaller screens */
   }
 }
 
 /* Media query for very small screens */
-@media screen and (max-width: 1000px) { /* Adjust 600px as needed */
+@media screen and (max-width: 1000px) { 
+  .input_container {
+    height: 35vh; 
+  }
+
   .textarea {
     width: calc(80% - 20px); /* Larger width on smaller screens */
   }
@@ -40,3 +61,24 @@
   color: #fff;
 }
 
+.evaluate-button {
+  margin-top: 20px; /* Spacing between messages */
+  text-align: left; /* Align text to the left */
+  font-size: 16px;
+  line-height: 175%;
+  padding-bottom: 20px;
+  width: 6%;
+  padding: 20px;
+  color: #eee;
+  font-family: 'Noto Sans', sans-serif;
+}
+
+.dark-mode .evaluate-button {
+  background-color: green;
+  font-weight: bold;
+}
+
+.light-mode .evaluate-button {
+  background-color: #545470;
+  font-weight: bold;
+}

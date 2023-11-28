@@ -18,27 +18,52 @@ function ChatWindow({ conversation, codevalue }) {
 
   const { isVisible, message, showToast } = useToast();
 
+
+  const processedMessages = conversation.map(msg => {
+    let avatarSymbol, label;
+    switch (msg.type) {
+      case 'user':
+        avatarSymbol = '👨‍💻';
+        label = 'You';
+        break;
+      case 'bot':
+        avatarSymbol = '🤖';
+        label = 'AI';
+        break;
+      case 'eval':
+        avatarSymbol = '🔍';
+        label = 'Evaluation';
+        break;
+      default:
+        avatarSymbol = '❓';
+        label = 'Unknown';
+    }
+
+    return { ...msg, avatarSymbol, label };
+  });
+
+
   return (
-  	<div className="chat-window">
+    <div className="chat-window">
   	  {/*
 	  	<CodeBlock
 	      codevalue = {codevalue}
 	      language = {'python'}
 	    />
 	    */}
-	    {conversation.map((msg, index) => (
-	      <div key={index} className={`message ${msg.type === 'user' ? 'user-message' : 'bot-message'}`}>
+	    {processedMessages.map((msg, index) => (
+	      <div key={index} className={`message ${msg.type}-message`}>
 	        <div className="message-header">
-	          <div className={`avatar ${msg.type === 'user' ? 'user-avatar' : 'ai-avatar'}`}
+	          <div className={`avatar ${msg.type}-avatar`}
 	               onClick={() => copyToClipboard(msg.text)}>
 	            <span className={`tooltip-text`}>Copy</span>
-	            {msg.type === 'user' ? '👨‍💻' : '🤖'} {/* User and AI emojis */}
+	            {msg.avatarSymbol} {/* Emoji based on message type */}
 	          </div>
-	          <div className="label">{msg.type === 'user' ? 'You' : 'AI'}</div>
+	          <div className="label">{msg.label}</div>
 	        </div>
 	        <div className="message-content" dangerouslySetInnerHTML={{ __html: msg.text }}></div>
 	      </div>
-	    ))}
+	   ))}
 	    {isVisible && <div className="toast">{message}</div>}
     </div>
   );

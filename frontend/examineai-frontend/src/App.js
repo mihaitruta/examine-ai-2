@@ -14,7 +14,7 @@ function App() {
   const [chatId, setChatId] = useState(null);
 
   // Chat functionality
-  const { message: chatMessage, setMessage, conversation, sendMessage, resetChat } = useChat();
+  const { message: chatMessage, setMessage, conversation, sendMessage, resetChat, getEvaluation } = useChat();
 
   // Toast functionality
   const { isVisible, message: toastMessage, showToast } = useToast();
@@ -78,9 +78,6 @@ function App() {
     console.log(theme)
   };
 
-
-
-  
   return (
     <div className={`App ${theme}`}>
       <MenuBar
@@ -98,6 +95,7 @@ function App() {
         message={chatMessage}
         setMessage={setMessage}
         sendMessage={sendMessage}
+        get_evaluation={getEvaluation}
       />
       {isVisible && <div className="toast">{toastMessage}</div>}
     </div>

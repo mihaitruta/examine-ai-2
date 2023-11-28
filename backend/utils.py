@@ -141,7 +141,6 @@ def read_records(filename: str, logger, fields : List = None) -> Dict:
     record_nr = 0
     with open(filename, "rt", encoding="UTF-8", errors="replace") as f:
         for line in f:
-            print("looking at line:<", line, '>')
             line = line.strip()
             if line != '':
                 try:
