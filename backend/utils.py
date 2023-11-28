@@ -4,6 +4,7 @@ import tiktoken
 from typing import List, Dict
 import json
 import logging
+import sys
 
 EXIT_STATUS_ANSWERS_MALFORMED = 1
 EXIT_STATUS_PREDICTIONS_MALFORMED = 2
@@ -140,24 +141,25 @@ def read_records(filename: str, logger, fields : List = None) -> Dict:
     record_nr = 0
     with open(filename, "rt", encoding="UTF-8", errors="replace") as f:
         for line in f:
+            print("looking at line:<", line, '>')
             line = line.strip()
-            try:
-                record = json.loads(line)
-            except ValueError as e:
-                logging.error("Error while reading file %s: %s", filename, e)
-                sys.exit(EXIT_STATUS_ANSWERS_MALFORMED)
+            if line != '':
+                try:
+                    record = json.loads(line)
+                except ValueError as e:
+                    logging.error("Error while reading file %s: %s", filename, e)
 
-            if fields is None:
-                records.append(record)
-            else:
-                item = {}
-                for field in fields:
-                    if field in record:
-                        item[field] = record[field]
-                    else:
-                        logging.error("Field %s not in record %s in file %s.", field, record_nr, filename)
-                records.append(item)
-            record_nr += 1
+                if fields is None:
+                    records.append(record)
+                else:
+                    item = {}
+                    for field in fields:
+                        if field in record:
+                            item[field] = record[field]
+                        else:
+                            logging.error("Field %s not in record %s in file %s.", field, record_nr, filename)
+                    records.append(item)
+                record_nr += 1
 
     logging.info("\nSuccessfully read file %s.\n", filename)
     
@@ -192,29 +194,40 @@ def calculate_accuracy(actual : Dict, predicted : Dict, logger) :
     return score / len(actual)
 
 
-def write_objects_to_jsonl(objects, file_path, mode='a'):
+def write_objects_to_jsonl(objects, file_path, mode='a', new_line = 1):
+
+    # new_line = 1 write on new line if file is not empty
+    # new_line = 2 always write on new line 
+
     # Ensure the directory exists
     os.makedirs(os.path.dirname(file_path), exist_ok=True)
 
     write_on_new_line = False
 
-    # Check if the file is non-empty
-    try:
-        with open(file_path, 'r') as file:
-            # If the file has content, prepend a newline to the first line to append
-            if file.read(1):
-                write_on_new_line = True
-    except FileNotFoundError:
-        # If the file doesn't exist, it's okay; it will be created in append mode
-        pass
+    if new_line == 1 :
+        # Check if the file is non-empty
+        try:
+            with open(file_path, 'r') as file:
+                # If the file has content, prepend a newline to the first line to append
+                if file.read(1):
+                    write_on_new_line = True
+                    print('file is not empty')
+        except FileNotFoundError:
+            # If the file doesn't exist, it's okay; it will be created in append mode
+            pass
+    elif new_line == 2:
+        write_on_new_line = True
+    else:
+        write_on_new_line = True
 
-    with open(file_path, mode) as file:
+
+    with open(file_path, 'a') as file:
         for idx, obj in enumerate(objects):
             # Convert the object to JSON and write it to the file
             json_line = json.dumps(obj)
             # if we are adding the first object we potentially add a new line first
             if idx == 0:
-                if write_on_new_line:
+               if write_on_new_line:
                     file.write('\n')
             file.write(json_line)
             # if we wrote the last object we skip the new line

@@ -6,6 +6,7 @@
   display: flex; /* Using flexbox */
   flex-direction: column; /* Stack messages vertically */
   align-items: center; /* Center messages horizontally */
+  scrollbar-width: none;
 }
 
 /* Media query for smaller screens */

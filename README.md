@@ -7,10 +7,10 @@ This repository contains the code for `examine|AI`, a React-based web applicatio
 ## Features
 
 - Interactive chat with an AI model.
+- Storage of chat history with timestamps.
 
 ## Coming soon
 
-- Storage of chat history with timestamps.
 - Safety evaluation of AI responses using predefined principles.
 - Docker support for containerization.
 

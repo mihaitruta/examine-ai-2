@@ -11,8 +11,10 @@ import MessageInput from './components/MessageInput';
 
 function App() {
 
+  const [chatId, setChatId] = useState(null);
+
   // Chat functionality
-  const { message: chatMessage, setMessage, conversation, sendMessage } = useChat();
+  const { message: chatMessage, setMessage, conversation, sendMessage, resetChat } = useChat();
 
   // Toast functionality
   const { isVisible, message: toastMessage, showToast } = useToast();
@@ -36,7 +38,8 @@ function App() {
     switch (itemText) {
       case 'Reset Chat':
         console.log('Reset Chat');
-        showToast('Reset Chat')
+        resetChat(); // Method to reset conversation
+        showToast('Chat reset');
         break;
       case 'Settings':
         showToast('Settings')
@@ -52,8 +55,6 @@ function App() {
     // Close the dropdown menu if needed
     setIsDropdownVisible(false);
   }
-
-
 
 
 

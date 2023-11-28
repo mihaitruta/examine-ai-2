@@ -13,9 +13,6 @@ from datetime import datetime
 
 testing = -1
 
-timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-print("Setting new conversation timestamp: ", timestamp)
-
 # Make sure to set the OPENAI_API_KEY in your environment variables.
 api_key = os.environ.get("OPENAI_API_KEY")
 
@@ -25,7 +22,7 @@ logger = setup_logging('main_log')
 # Initialize the Flask application
 app = Flask(__name__)
 # Enable CORS for all routes
-CORS(app, resources={r"/chat": {"origins": "*"}})
+CORS(app, resources={r"/chat": {"origins": "*"}, r"/reset_chat": {"origins": "*"}})
 
 def _testing(conversation : List[Dict]):
     if testing == 0:
@@ -58,18 +55,26 @@ def _testing(conversation : List[Dict]):
     print(formatted_response)
 
 
-@app.route('/chat', methods=['POST'])
+@app.route('/reset_chat', methods=['POST'])
+def reset_chat():
+    print("Initializing new chat")
+    chat_id = ChatStore.new_chat()
+    return jsonify({'message' : 'reset', 'chat_id' : chat_id})
+    
 
+@app.route('/chat', methods=['POST'])
 def chat():
 
-
-    conversation = ChatStore.retrieve_chat(timestamp)
-
-    
-    print('conversation:',  conversation)
-
     # obtain user input from the frontend
-    user_input = request.json.get('message')
+    #user_input = request.json.get('message')
+    data = request.get_json()
+    user_input = data.get('message')
+    chat_id = data.get('chat_id')
+    print(user_input)
+    print(chat_id)
+
+    conversation = ChatStore.retrieve_chat(chat_id)
+    print('conversation:',  conversation)
 
     # we append it to the conversation
     conversation.append({
@@ -87,23 +92,19 @@ def chat():
         #model = model_id,
         logger = logger
     )
-    
     # we get the response from the primary AI
     content, status, details = primary_AI_responder.get_response(conversation)
-
     # we format it to html
     formatted_response = format_message(content)
-
     # we append the response to the conversation
     ChatStore.add_message(
-        timestamp,
+        chat_id,
         {
             'role': 'assistant', 
             'content': formatted_response,
             'status' : status
         }
     )
-
     # we return the response to the frontend
     return jsonify({"response": formatted_response})
 
