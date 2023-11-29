@@ -29,15 +29,32 @@
   height: 8vh; 
 }
 
+.evaluate-button {
+  margin-top: 20px; /* Spacing between messages */
+  text-align: left; /* Align text to the left */
+  font-size: 16px;
+  line-height: 175%;
+  padding-bottom: 20px;
+  width: 6%;
+  padding: 20px;
+  color: #eee;
+  font-family: 'Noto Sans', sans-serif;
+}
+
 /* Media query for smaller screens */
 @media screen and (max-width: 1400px) { 
   .input_container {
     height: 30vh; 
   }
 
+  .evaluate-button {
+    width: 10%;
+  }
+
   .textarea {
     width: calc(65% - 20px); /* Larger width on smaller screens */
   }
+
 }
 
 /* Media query for very small screens */
@@ -46,8 +63,42 @@
     height: 35vh; 
   }
 
+  .evaluate-button {
+    width: 15%;
+  }
+
   .textarea {
     width: calc(80% - 20px); /* Larger width on smaller screens */
+  }
+}
+
+/* Media query for smaller screens */
+@media screen and (max-height: 1000px) { 
+  .input_container {
+    height: 30vh; 
+  }
+
+  .evaluate-button {
+    width: 8%;
+  }
+
+  .textarea {
+    height: 10vh;  /* Larger height on smaller screens */
+  }
+}
+
+/* Media query for very small screens */
+@media screen and (max-height: 600px) { 
+  .input_container {
+    height: 35vh; 
+  }
+
+  .evaluate-button {
+    width: 10%;
+  }
+
+  .textarea {
+    height: 12vh; 
   }
 }
 
@@ -59,18 +110,6 @@
 .dark-mode .textarea {
   border: 2px solid rgba(200,200,200,.5);
   color: #fff;
-}
-
-.evaluate-button {
-  margin-top: 20px; /* Spacing between messages */
-  text-align: left; /* Align text to the left */
-  font-size: 16px;
-  line-height: 175%;
-  padding-bottom: 20px;
-  width: 6%;
-  padding: 20px;
-  color: #eee;
-  font-family: 'Noto Sans', sans-serif;
 }
 
 .dark-mode .evaluate-button {

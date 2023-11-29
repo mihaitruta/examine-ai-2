@@ -102,7 +102,8 @@ function useChat() {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-      }
+      },
+      body: JSON.stringify({ 'chat_id': chatId, 'message': 'optional_info' }),
     });
 
     const data = await response.json();

@@ -23,6 +23,20 @@
   }
 }
 
+/* Media query for smaller screens */
+@media screen and (max-height: 1000px) { 
+  .chat-window {
+    height: 65%; /* Larger width on smaller screens */
+  }
+}
+
+/* Media query for very small screens */
+@media screen and (max-height: 600px) { 
+  .chat-window {
+    height: 55%; /* Larger width on smaller screens */
+  }
+}
+
 .chat-window::-webkit-scrollbar {
   display: none; /* Hides the scrollbar */
 }
@@ -43,7 +57,7 @@
 .message-header {
   display: flex;
   align-items: center;
-  margin-bottom: 10px; /* Spacing between header and message content */
+  margin-bottom: 0px; /* Spacing between header and message content */
 }
 
 /* Avatar Style */
@@ -84,15 +98,28 @@
   margin-right: auto;
   width: 80%;
   overflow-wrap: break-word;
+  padding-bottom: 20px;
+}
+
+/* quotes in the eval messages */
+.message-content .quote {
+    background-color: #252525;
+    padding: 15px;
+    margin: 15px;
+    border-radius: 10px;
+    font-size: 14px;
 }
 
 .dark-mode .bot-message {
   background-color: #454545;
+  background-color: #252525;
   border-radius: 10px;
 }
 
 .dark-mode .eval-message {
   background-color: #554545;
+  background-color: #283d2f;
+  background-color: #454545;
   border-radius: 10px;
 }
 
@@ -175,12 +202,20 @@ pre {
   background-color: #9874c4;
 }
 
-.ai-avatar {
-  background-color: #ffcc80; 
+.bot-avatar {
+  background-color: #ddcc80; 
 }
 
-.ai-avatar:hover {
+.bot-avatar:hover {
   background-color: #c2995b; 
+}
+
+.eval-avatar {
+  background-color: #278c49;
+}
+
+.eval-avatar:hover {
+  background-color: #41965e;
 }
 
 .dark-mode .user-avatar {

@@ -210,7 +210,6 @@ def write_objects_to_jsonl(objects, file_path, mode='a', new_line = 1):
                 # If the file has content, prepend a newline to the first line to append
                 if file.read(1):
                     write_on_new_line = True
-                    print('file is not empty')
         except FileNotFoundError:
             # If the file doesn't exist, it's okay; it will be created in append mode
             pass

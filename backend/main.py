@@ -9,6 +9,7 @@ from openai_api import OpenAIResponder
 import logging
 from typing import List, Dict
 from datetime import datetime
+from safeguard import SafeguardAI
 
 
 testing = -1
@@ -57,7 +58,6 @@ def _testing(conversation : List[Dict]):
 
 @app.route('/reset_chat', methods=['POST'])
 def reset_chat():
-    print("Initializing new chat")
     chat_id = ChatStore.new_chat()
     return jsonify({'message' : 'reset', 'chat_id' : chat_id})
 
@@ -66,7 +66,27 @@ def reset_chat():
 @app.route('/get_eval', methods=['POST'])
 def get_eval():
     print("Getting safeguard eval")
-    return jsonify({'evaluation' : 'placeholder eval'})
+
+    data = request.get_json()
+    print(data)
+    user_input = data.get('message')
+    chat_id = data.get('chat_id')
+    print(user_input)
+    print(chat_id)
+
+    conversation = ChatStore.retrieve_chat(chat_id)
+
+    # we define the safeguard AI settings
+    safeAI = SafeguardAI(
+        api_key = api_key,
+        model = 'gpt-3.5-turbo-0613',
+        logger=logger
+    )
+
+    evaluation = safeAI.get_evaluation(chat_id)
+
+
+    return jsonify({'evaluation' : evaluation})
     
     
 
@@ -78,17 +98,25 @@ def chat():
     data = request.get_json()
     user_input = data.get('message')
     chat_id = data.get('chat_id')
-    print(user_input)
     print(chat_id)
 
     conversation = ChatStore.retrieve_chat(chat_id)
-    print('conversation:',  conversation)
 
     # we append it to the conversation
     conversation.append({
         'role': 'user', 
         'content': user_input
     })
+
+    # we store the user reply
+    ChatStore.add_message(
+        chat_id,
+        {
+            'role': 'user', 
+            'content': user_input,
+            'status' : 'OK'
+        }
+    )
 
     if testing >= 0:
         print("testing")

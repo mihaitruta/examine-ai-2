@@ -31,33 +31,6 @@ class ChatStore:
         return chat_id
 
 
-    @staticmethod 
-    def _new_chat(file_dir = 'chat_logs'):
-        file_path = f"{file_dir}/chat_list.jsonl"
-
-        # Ensure the directory exists
-        os.makedirs(file_dir, exist_ok=True)
-        # Create the file if it doesn't exist
-        with open(file_path, 'a') as file:
-            pass 
-
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        chat_id = ''.join(random.choice(string.ascii_uppercase + string.ascii_lowercase + string.digits) for _ in range(10))
-
-
-        # initialize the log file
-        log_path = f"{file_dir}/chat_log_{timestamp}_{chat_id}.jsonl"
-        with open(file_path, 'w') as file:
-            pass 
-        
-        write_objects_to_jsonl([{
-            'timestamp' : timestamp,
-            'id' : chat_id,
-            'file_path' : log_path
-        }], file_path, mode='a')
-
-        return chat_id
-
     @staticmethod
     def _retrieve_chat_file_path(chat_id : str, file_dir = 'chat_logs'):
 
@@ -80,9 +53,15 @@ class ChatStore:
 
 
     @staticmethod
-    def retrieve_chat(chat_id : str, file_dir = 'chat_logs'):
+    def retrieve_chat(chat_id : str, eval = False, file_dir = 'chat_logs'):
         log_path = ChatStore._retrieve_chat_file_path(chat_id, file_dir = file_dir)
-        return read_records(log_path, logger=logger)
+        messages = read_records(log_path, logger=logger)
+        
+        # we filter evaluation messages
+        if eval is False:
+            messages = [message for message in messages if message['role'] != 'eval']
+
+        return messages
                 
 
     @staticmethod
