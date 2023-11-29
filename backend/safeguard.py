@@ -32,34 +32,35 @@ class SafeguardAI:
 
     def get_evaluation(self, chat_id : str) -> str:
 
-        conversation = ChatStore.retrieve_chat(chat_id)
+        conversation = ChatStore.retrieve_chat(chat_id, eval = True)
 
         evaluation = ''
 
-        for message in conversation:
+        last_eval_idx = -1
+        for idx, message in enumerate(conversation):
+            if message['role'] == 'eval':
+                last_eval_idx = idx
 
-            if message['role'] == 'assistant':
-                print('evaluating message: ', message['content'])
-                msg_eval = '</br>'
-                msg_eval +=  '<div class="quote"><i>' + message['content'] + '</i></div>'
-                fact_eval = self._evaluate_factuality(message['content'])
-                msg_eval += '<ul>' + format_message(fact_eval) + '</ul></br>'
+        for idx, message in enumerate(conversation):
+            if idx >= last_eval_idx + 1:
+                if message['role'] == 'assistant':
+                    print('evaluating message: ', message['content'])
+                    msg_eval = '</br>'
+                    msg_eval +=  '<div class="quote"><i>' + message['content'] + '</i></div>'
+                    fact_eval = self._evaluate_factuality(message['content'])
+                    msg_eval += '<ul>' + format_message(fact_eval) + '</ul></br>'
 
-                # we store the evaluation for each message
-                ChatStore.add_message(
-                    chat_id,
-                    {
-                        'role': 'eval', 
-                        'content': msg_eval,
-                        'status' : 'OK'
-                    }
-                )
+                    # we store the evaluation for each message
+                    ChatStore.add_message(
+                        chat_id,
+                        {
+                            'role': 'eval', 
+                            'content': msg_eval,
+                            'status' : 'OK'
+                        }
+                    )
 
-                evaluation += msg_eval
-
-
-
-        print(evaluation)
+                    evaluation += msg_eval
 
         return evaluation
 

@@ -35,7 +35,7 @@
   font-size: 16px;
   line-height: 175%;
   padding-bottom: 20px;
-  width: 6%;
+  width: 100px;
   padding: 20px;
   color: #eee;
   font-family: 'Noto Sans', sans-serif;
@@ -48,7 +48,7 @@
   }
 
   .evaluate-button {
-    width: 10%;
+    
   }
 
   .textarea {
@@ -64,7 +64,7 @@
   }
 
   .evaluate-button {
-    width: 15%;
+    
   }
 
   .textarea {
@@ -79,7 +79,7 @@
   }
 
   .evaluate-button {
-    width: 8%;
+    
   }
 
   .textarea {
@@ -94,7 +94,7 @@
   }
 
   .evaluate-button {
-    width: 10%;
+    
   }
 
   .textarea {

@@ -74,8 +74,6 @@ def get_eval():
     print(user_input)
     print(chat_id)
 
-    conversation = ChatStore.retrieve_chat(chat_id)
-
     # we define the safeguard AI settings
     safeAI = SafeguardAI(
         api_key = api_key,
@@ -94,7 +92,6 @@ def get_eval():
 def chat():
 
     # obtain user input from the frontend
-    #user_input = request.json.get('message')
     data = request.get_json()
     user_input = data.get('message')
     chat_id = data.get('chat_id')
