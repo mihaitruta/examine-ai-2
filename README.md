@@ -30,60 +30,93 @@ You can do that as follows:
 ```sh
 export OPENAI_API_KEY='your_api_key_here'
 ```
-(see https://help.openai.com/en/articles/5112595-best-practices-for-api-key-safety for more info)
+(see [API key best practices](https://help.openai.com/en/articles/5112595-best-practices-for-api-key-safety) for more info)
 
 ### Backend Setup
 Clone the repository to your local device:
-`git clone https://github.com/mihaitruta/examine-ai-2.git`
+```sh
+git clone https://github.com/mihaitruta/examine-ai-2.git
+```
 In a terminal go to the project folder:
-`cd examine-ai-2`
+```sh
+cd examine-ai-2
+```
 
 #### Setting up a Virtual Environment
 This isolates the project dependencies from the global Python environment.
 In the terminal go inside the backend folder:
-`cd backend`
+```sh
+cd backend
+```
 Create a new virtual environment:
+```
 python3.12 -m venv /path/to/new/virtualenv
-Deactivate other environemnts:
-`deactivate`
+```
+Deactivate other environemnts if applicable:
+```sh
+deactivate
+```
 If a conda environment is active use:
-`conda deactivate`
+```sh
+conda deactivate
+```
 Activate the virtual environment we created:
- - Windows: `\path\to\new\virtualenv\Scripts\activate`
- - Linux/Mac: `source /path/to/new/virtualenv/bin/activate`
+ - Windows: 
+```sh
+ \path\to\new\virtualenv\Scripts\activate
+```
+ - Linux/Mac: 
+ ```sh
+ source /path/to/new/virtualenv/bin/activate
+ ```
  To deactivate the env when finished use:
- `deactivate`
+  ```sh
+ deactivate
+ ```
 
 #### Install Dependencies:
-`pip install -r requirements.txt`
+```sh
+pip install -r requirements.txt
+```
 
 #### Running the Backend:
-`python main.py`
+```sh
+python main.py
+```
 The backend server should now be running on the default port (5000).
 
 ### Frontend Setup
 
 #### Navigate to Frontend Directory:
 In another terminal instance go to the fontend directory:
-`cd frontend`
-Inside there is a directory called examineai-frontend.
+```sh
+cd frontend
+```
+Inside there is a directory called `examineai-frontend`.
 Move this directory somewhere else.
 
 #### Initialize the react app
-Use the following command to initialize the React app (see [React Getting Started](https://create-react-app.dev/docs/getting-started)):
-(only use sudo if you get errors otherwise)
-`sudo npx create-react-app examineai-frontend`
+Use the following command to initialize the React app (see [React Getting Started](https://create-react-app.dev/docs/getting-started)) (only use sudo if you get errors otherwise):
+```sh
+sudo npx create-react-app examineai-frontend
+```
 For each file in the directory we moved earlier copy it back to the newly created project directory.
 Replace any files with identical names.
 
 #### Install dependencies
 Go in the examineai-frontend directory:
-`cd examineai-frontend`
+```sh
+cd examineai-frontend
+```
 Use the following command to install required dependencies:
-`xargs npm install < dependencies.txt`
+```sh
+xargs npm install < dependencies.txt
+```
 
 #### Start the project
-`sudo npm start`
+```sh
+sudo npm start
+```
 The frontend should now be running on localhost:3000.
 
 ## Interacting with the Application
