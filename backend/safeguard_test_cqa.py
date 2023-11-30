@@ -84,8 +84,8 @@ if __name__ == "__main__":
 
     primary_model_id = 'gpt-4-1106-preview'
     dataset_file = './datasets/CommonsenseQA/train_rand_split_500.jsonl'
-    answers_file = './results/CommonsenseQA/p_' + primary_model_id + '_cqa_500.jsonl'
-    #answers_file = './results/CommonsenseQA/test.jsonl'
+    #answers_file = './results/CommonsenseQA/p_' + primary_model_id + '_cqa_500.jsonl'
+    answers_file = './results/CommonsenseQA/test.jsonl'
     
 
     primaryAI = PrimaryAI(
@@ -96,4 +96,4 @@ if __name__ == "__main__":
 
     records = read_records_with_id(dataset_file, logger=logger)
 
-    get_answers(primaryAI, records, answers_file=answers_file)
+    get_answers(primaryAI, records, answers_file=answers_file, ct=1)

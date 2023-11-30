@@ -68,3 +68,23 @@ class ChatStore:
     def add_message(chat_id, message : Dict, file_dir = 'chat_logs'):
         log_path = ChatStore._retrieve_chat_file_path(chat_id, file_dir = file_dir)
         write_objects_to_jsonl([message], log_path, mode='a')
+
+    @staticmethod
+    def add_user_message(chat_id, content : str, status : str = 'OK', file_dir = 'chat_logs'):
+        log_path = ChatStore._retrieve_chat_file_path(chat_id, file_dir = file_dir)
+        message = {
+            'role': 'user', 
+            'content': content,
+            'status' : status
+        }
+        write_objects_to_jsonl([message], log_path, mode='a')
+
+    @staticmethod
+    def add_assistant_message(chat_id, content : str, status : str = 'OK', file_dir = 'chat_logs'):
+        log_path = ChatStore._retrieve_chat_file_path(chat_id, file_dir = file_dir)
+        message = {
+            'role': 'assistant', 
+            'content': content,
+            'status' : status
+        }
+        write_objects_to_jsonl([message], log_path, mode='a')

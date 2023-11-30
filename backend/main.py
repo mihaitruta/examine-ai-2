@@ -1,8 +1,7 @@
-# Import necessary libraries
+import os
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from openai import OpenAI
-import os
 from utils import format_message, setup_logging
 from chat_store import ChatStore
 from openai_api import OpenAIResponder
@@ -10,7 +9,7 @@ import logging
 from typing import List, Dict
 from datetime import datetime
 from safeguard import SafeguardAI
-
+import argparse
 
 testing = -1
 
@@ -25,44 +24,30 @@ app = Flask(__name__)
 # Enable CORS for all routes
 CORS(app, resources={r"/chat": {"origins": "*"}, r"/reset_chat": {"origins": "*"}, r"/get_eval": {"origins": "*"} })
 
-def _testing(conversation : List[Dict]):
-    if testing == 0:
-        # Call OpenAI API to generate a response
-        response = client.chat.completions.create(
-            model="gpt-3.5-turbo",
-            messages=conversation
-        )
+def _testing():
+    test_responses = {
+        1: lambda: open('test_files/long_response_with_code.txt').read(),
+        2: lambda: open('test_files/short_response_with_code_and_list.txt').read(),
+        3: lambda: open('test_files/multi_line_response.txt').read()
+    }
 
-        print(response.choices[0].message.content)
-
-        formatted_response = format_message(response.choices[0].message.content)
-
-    elif testing == 1:
-        with open('test_files/long_response_with_code.txt', 'r') as file:
-            message = file.read()
-
+    response_generator = test_responses.get(testing)
+    if response_generator:
+        message = response_generator()
         formatted_response = format_message(message)
-    elif testing == 2:
-        with open('test_files/short_response_with_code_and_list.txt', 'r') as file:
-            message = file.read()
+        return formatted_response
 
-        formatted_response = format_message(message)
-    elif testing == 3:
-        with open('test_files/multi_line_response.txt', 'r') as file:
-            message = file.read()
-
-        formatted_response = format_message(message)
-
-    print(formatted_response)
+    return None
 
 
+# endpoint for resetting chat
 @app.route('/reset_chat', methods=['POST'])
 def reset_chat():
     chat_id = ChatStore.new_chat()
     return jsonify({'message' : 'reset', 'chat_id' : chat_id})
 
 
-
+# endpoint for obtaining evaluation
 @app.route('/get_eval', methods=['POST'])
 def get_eval():
     print("Getting safeguard eval")
@@ -83,11 +68,10 @@ def get_eval():
 
     evaluation = safeAI.get_evaluation(chat_id)
 
-
     return jsonify({'evaluation' : evaluation})
     
     
-
+# endpoint for chat responses
 @app.route('/chat', methods=['POST'])
 def chat():
 
@@ -95,34 +79,23 @@ def chat():
     data = request.get_json()
     user_input = data.get('message')
     chat_id = data.get('chat_id')
-    print(chat_id)
 
-    conversation = ChatStore.retrieve_chat(chat_id)
-
-    # we append it to the conversation
-    conversation.append({
-        'role': 'user', 
-        'content': user_input
-    })
+    # if testing we return predefined response
+    testing = app.config['TESTING']
+    if testing > -1:
+        test_response = _testing(conversation)
+        if test_response is not None:
+            return jsonify({"response": test_response})
 
     # we store the user reply
-    ChatStore.add_message(
-        chat_id,
-        {
-            'role': 'user', 
-            'content': user_input,
-            'status' : 'OK'
-        }
-    )
+    ChatStore.add_user_message(chat_id, user_input)
 
-    if testing >= 0:
-        print("testing")
-        _testing(conversation)
+    # we retrieve the conversation based on chat_id
+    conversation = ChatStore.retrieve_chat(chat_id)
     
     # we define the primary AI settings
     primary_AI_responder = OpenAIResponder(
         api_key = api_key,
-        #model = model_id,
         logger = logger
     )
     # we get the response from the primary AI
@@ -130,16 +103,23 @@ def chat():
     # we format it to html
     formatted_response = format_message(content)
     # we append the response to the conversation
-    ChatStore.add_message(
-        chat_id,
-        {
-            'role': 'assistant', 
-            'content': formatted_response,
-            'status' : status
-        }
-    )
+    ChatStore.add_assistant_message(chat_id, formatted_response, status)
     # we return the response to the frontend
     return jsonify({"response": formatted_response})
 
+
 if __name__ == '__main__':
+    # Argument parser setup
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        '--testing', 
+        type=int, 
+        default=-1, 
+        help='testing with hard coded response'
+    )
+    args = parser.parse_args()
+    testing = args.testing
+
+    app.config['TESTING'] = args.testing
+
     app.run(debug=True)
