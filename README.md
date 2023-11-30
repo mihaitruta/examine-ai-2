@@ -1,4 +1,7 @@
 # README
+# DEPRECATED 
+
+Further development will be in `https://github.com/OpenBioLink/examine-ai`
 
 ## Overview
 
